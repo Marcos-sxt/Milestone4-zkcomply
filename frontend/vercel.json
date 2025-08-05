@@ -9,6 +9,6 @@
     }
   },
   "env": {
-    "NEXT_PUBLIC_BACKEND_URL": "https://milestone4-zkcomply.onrender.com"
+    "NEXT_PUBLIC_BACKEND_URL": "https://zk-comply-backend.onrender.com"
   }
 }
