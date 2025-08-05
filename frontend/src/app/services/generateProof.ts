@@ -40,7 +40,7 @@ export const generateProof = async (
   moleculeData: MoleculeData,
   onProgress?: (progress: ProofProgress) => void
 ): Promise<ProofResult> => {
-  const BACKEND = "http://127.0.0.1:3001";
+  const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:3001";
 
   const steps = [
     "Configurando sessão...",
