@@ -15,12 +15,28 @@ const PORT = 3001;
 
 async function main() {
   const app = express();
+
+  // ✅ CORREÇÃO CORS: Permitir domínio do Vercel
   app.use(cors({
-    origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
-    methods: ["GET", "POST"],
+    origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://milestone4-zkcomply-fbds.vercel.app",
+      "https://milestone4-zkcomply.vercel.app"],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }));
   app.use(express.json());
+
+  // ✅ Adicionar rota de health check para evitar 404
+  app.get("/", (req, res) => {
+    res.json({ 
+      status: "ok", 
+      message: "ZK Backend rodando",
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  // ✅ Adicionar rota OPTIONS para preflight CORS
+  app.options("*", cors());
 
   const session = await zkVerifySession.start().Volta().withAccount(SEED);
   const accountInfo = await session.getAccountInfo();
