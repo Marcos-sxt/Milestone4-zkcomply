@@ -18,12 +18,17 @@ async function main() {
 
   // ✅ CORREÇÃO CORS: Permitir domínio do Vercel
   app.use(cors({
-    origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://milestone4-zkcomply-fbds.vercel.app",
-      "https://milestone4-zkcomply.vercel.app"],
-    methods: ["GET", "POST", "OPTIONS"],
+    origin: [
+      "http://localhost:3000", 
+      "http://127.0.0.1:3000", 
+      "https://milestone4-zkcomply-fbds.vercel.app",
+      "https://milestone4-zkcomply.vercel.app"
+    ],
+    methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }));
+  
   app.use(express.json());
 
   // ✅ Adicionar rota de health check para evitar 404
@@ -34,9 +39,6 @@ async function main() {
       timestamp: new Date().toISOString()
     });
   });
-
-  // ✅ Adicionar rota OPTIONS para preflight CORS
-  app.options("*", cors());
 
   const session = await zkVerifySession.start().Volta().withAccount(SEED);
   const accountInfo = await session.getAccountInfo();
@@ -50,7 +52,7 @@ async function main() {
     const circuit = JSON.parse(fs.readFileSync(path.join(__dirname, "./public/circuit.json"), "utf-8"));
     const backend = new UltraPlonkBackend(circuit.bytecode);
     
-        // ✅ FORMATO FINAL: Strings hex de 32 bytes que o formatter aceita
+    // ✅ FORMATO FINAL: Strings hex de 32 bytes que o formatter aceita
     const rawPubs = Array.isArray(publicInputs) ? publicInputs : [publicInputs];
     
     // ✅ MANTER strings hex de 32 bytes - o pallet converte automaticamente
@@ -76,12 +78,6 @@ async function main() {
     console.log("  - 32-byte hex strings:", pubSignals);
     console.log("  - Count:", rawPubs.length);
     console.log("  - ✅ FORMATO CORRETO: 32-byte hex strings para zkverifyjs!");
-    
-    console.log("🔧 Public inputs processados:");
-    console.log("  - Raw inputs:", rawPubs);
-    console.log("  - Converted to 32-byte arrays:", pubSignals.map(p => `[${p.length} bytes]`));
-    console.log("  - Count:", rawPubs.length);
-    console.log("  - ✅ FORMATO CORRETO: Vec<[u8;32]> como pallet exige!");
 
     let localValid = false;
     try {
@@ -100,13 +96,24 @@ async function main() {
 
     const { convertProof, convertVerificationKey } = await import("olivmath-ultraplonk-zk-verify");
     
-    // ✅ CORREÇÃO CRÍTICA: usar rawPubs (números) para convertProof, não pubs (hex padded)
-    const proofHex = convertProof(new Uint8Array(proof), rawPubs.map(x => BigInt(x)));
-    //const proofHex = convertProof(new Uint8Array(proof), rawPubs.length);
+    // ✅ CORREÇÃO CRÍTICA: converter publicInputs para números antes de usar
+    const numericInputs = rawPubs.map(pub => {
+      if (typeof pub === 'string' && pub.startsWith('0x')) {
+        return BigInt(pub);
+      } else if (typeof pub === 'number') {
+        return BigInt(pub);
+      } else if (typeof pub === 'string') {
+        return BigInt(parseInt(pub));
+      } else {
+        return BigInt(0);
+      }
+    });
+    
+    const proofHex = convertProof(new Uint8Array(proof), numericInputs);
     const vkHex = convertVerificationKey(vk);
     
     console.log("🔧 Dados de conversão:");
-    console.log("  - Using raw inputs for conversion:", rawPubs.length, "inputs");
+    console.log("  - Using numeric inputs for conversion:", numericInputs.length, "inputs");
     console.log("  - Proof/VK converted successfully ✅");
 
     // ✅ FORMATO FINAL: 32-byte hex strings 
@@ -117,9 +124,8 @@ async function main() {
 
     // ✅ CORREÇÃO: Removendo session.format() que causa "No config found for Proof Processor"
     // Esse método é apenas para debug e não é necessário para submissão
-    console.log("� Prosseguindo direto para submissão zkVerify...");
+    console.log("🚀 Prosseguindo direto para submissão zkVerify...");
     console.log("📨 Public Inputs recebidos:", rawPubs);
-
 
     const { events } = await session.verify()
       .ultraplonk()  // ✅ SEM numberOfPublicInputs como projeto original que funciona
@@ -127,7 +133,7 @@ async function main() {
         proofData: { 
           proof: proofHex, 
           vk: vkHex,
-          publicSignals: pubSignals  // ✅ CORREÇÃO CRÍTICA: usar rawPubs como na conversão!
+          publicSignals: pubSignals  // ✅ CORREÇÃO CRÍTICA: usar pubSignals formatados!
         }
       });
 
