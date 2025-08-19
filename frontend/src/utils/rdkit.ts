@@ -13,12 +13,12 @@ const calculationCache = new Map<string, CalculatedProperties>();
 
 // Função principal para calcular propriedades moleculares
 export const calculateMolecularProperties = async (smiles: string): Promise<CalculatedProperties> => {
-  console.log("🧪 Processando SMILES:", smiles);
+  console.log("🧪 processing SMILES:", smiles);
   
   // Verificar cache primeiro
   if (calculationCache.has(smiles)) {
     const cached = calculationCache.get(smiles)!;
-    console.log("💾 Propriedades (CACHE):", cached);
+    console.log("💾 Properties (CACHE):", cached);
     return cached;
   }
 
@@ -28,11 +28,11 @@ export const calculateMolecularProperties = async (smiles: string): Promise<Calc
     
     // Cachear resultado
     calculationCache.set(smiles, properties);
-    console.log("📊 Propriedades calculadas (MOCK EXPANDIDO):", properties);
+    console.log("📊 Calculated properties (EXPANDED MOCK):", properties);
     return properties;
     
   } catch (error) {
-    console.error("❌ Erro no cálculo SMILES:", error);
+    console.error("❌ SMILES calculation error:", error);
     throw error;
   }
 };
@@ -117,7 +117,7 @@ const calculateWithExpandedMock = async (smiles: string): Promise<CalculatedProp
 
   // Se SMILES não está no mock, tentar estimativa básica
   if (!mockData[smiles]) {
-    console.log("⚠️ SMILES não está na base mock, usando estimativa básica para:", smiles);
+    console.log("⚠️ SMILES inst in mock base, using basic estimated value:", smiles);
     
     // Estimativa básica baseada na string SMILES (muito aproximada)
     const estimatedMW = estimateMolecularWeight(smiles);
@@ -132,12 +132,12 @@ const calculateWithExpandedMock = async (smiles: string): Promise<CalculatedProp
       rotatable_bonds: Math.max(0, Math.min(20, estimatedRB))
     };
     
-    console.log("🔮 Propriedades estimadas para", smiles, ":", properties);
+    console.log("🔮 estimated properties for", smiles, ":", properties);
     return properties;
   }
 
   const properties = mockData[smiles];
-  console.log("📊 Propriedades do mock para", smiles, ":", properties);
+  console.log("📊 mock properties for", smiles, ":", properties);
   return properties;
 };
 
@@ -223,12 +223,12 @@ const estimateRotatableBonds = (smiles: string): number => {
 // Moléculas de teste para validação
 export const TEST_MOLECULES = [
   { 
-    name: "Etanol", 
+    name: "Ethanol", 
     smiles: "CCO",
     expected: { mw: 46, hbd: 1, hba: 1, rb: 0 }
   },
   { 
-    name: "Aspirina", 
+    name: "Aspirin", 
     smiles: "CC(=O)OC1=CC=CC=C1C(=O)O",
     expected: { mw: 180, hbd: 1, hba: 4, rb: 3 }
   },
@@ -238,7 +238,7 @@ export const TEST_MOLECULES = [
     expected: { mw: 151, hbd: 2, hba: 2, rb: 1 }
   },
   { 
-    name: "Melatonina", 
+    name: "Melatonin", 
     smiles: "CC(=O)NCCC1=CNC2=C1C=C(C=C2)OC",
     expected: { mw: 232, hbd: 2, hba: 3, rb: 4 }
   }
