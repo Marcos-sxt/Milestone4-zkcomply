@@ -223,8 +223,8 @@ const estimateRotatableBonds = (smiles: string): number => {
 // Moléculas de teste para validação
 export const TEST_MOLECULES = [
   { 
-    name: "Ethanol", 
-    smiles: "CCO",
+    name: "Salbutamol", 
+    smiles: "CC(C)NCC(C1=CC=C(C=C1)O)O",
     expected: { mw: 46, hbd: 1, hba: 1, rb: 0 }
   },
   { 
