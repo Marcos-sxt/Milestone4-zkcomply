@@ -1,4 +1,3 @@
-// src/app/components/ProofProgress.tsx
 "use client";
 
 import { motion } from "framer-motion";
@@ -21,10 +20,10 @@ export const ProofProgress = ({ progress, isCompleted = false, hasError = false 
       animate={{ opacity: 1, y: 0 }}
       className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
     >
-      {/* Header do progresso */}
+      {/* Progress Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">
-          Gerando Prova ZK
+          Generating ZK Proof
         </h3>
         <div className="flex items-center space-x-2 text-sm text-gray-600">
           <span>{currentStep}</span>
@@ -33,7 +32,7 @@ export const ProofProgress = ({ progress, isCompleted = false, hasError = false 
         </div>
       </div>
 
-      {/* Barra de progresso */}
+      {/* Progress Bar */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-gray-700">{stepName}</span>
@@ -50,7 +49,7 @@ export const ProofProgress = ({ progress, isCompleted = false, hasError = false 
         </div>
       </div>
 
-      {/* Status atual */}
+      {/* Current Status */}
       <div className="flex items-center space-x-3">
         {hasError ? (
           <AlertCircle className="w-5 h-5 text-red-500" />
