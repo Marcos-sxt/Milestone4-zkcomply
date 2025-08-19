@@ -62,7 +62,7 @@ export const LoadingWithText = ({
 };
 
 // Loading para tela inteira
-export const FullPageLoading = ({ message = "Processing..." }: { message?: string }) => {
+export const FullPageLoading = ({ message = "Processando..." }: { message?: string }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
