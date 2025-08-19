@@ -30,11 +30,11 @@ export default function Home() {
     setProgress(null);
     
     try {
-      console.log("🚀 Iniciando geração de prova para SMILES:", moleculeData.smiles);
+      console.log("🚀 Starting proof generation for SMILES:", moleculeData.smiles);
       const result = await generateProof(moleculeData, setProgress);
       setResult(result);
     } catch (error) {
-      console.error("Erro na geração da prova:", error);
+      console.error("Error generating the Proof:", error);
     } finally {
       setIsProcessing(false);
     }
@@ -91,10 +91,10 @@ export default function Home() {
                     <div className="text-center">
                       <CheckCircle className="w-16 h-16 mx-auto mb-4" />
                       <h3 className="text-3xl font-bold mb-2">
-                        Prova ZK Gerada com Sucesso!
+                        ZK Proof Successfully Generated!
                       </h3>
                       <p className="text-green-100">
-                        Sua prova foi verificada e registrada na blockchain zkVerify
+                        Your proof has been verified and recorded on the zkVerify blockchain
                       </p>
                     </div>
                   </div>
@@ -103,10 +103,10 @@ export default function Home() {
                     <div className="text-center">
                       <XCircle className="w-16 h-16 mx-auto mb-4" />
                       <h3 className="text-3xl font-bold mb-2">
-                        Erro na Geração da Prova
+                        Error in Proof Generation
                       </h3>
                       <p className="text-red-100">
-                        Houve um problema durante o processo de verificação
+                        There was a problem during the verification process
                       </p>
                     </div>
                   </div>
@@ -118,7 +118,7 @@ export default function Home() {
                       <div className="bg-gray-50 p-6 rounded-2xl">
                         <h4 className="font-bold text-gray-900 mb-4 flex items-center">
                           <ExternalLink className="w-5 h-5 mr-2" />
-                          Detalhes da Transação
+                          Transaction Details
                         </h4>
                         <div className="space-y-4">
                           <div>
