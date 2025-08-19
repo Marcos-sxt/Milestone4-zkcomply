@@ -43,7 +43,7 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
   const handleSubmit = () => {
     if (properties) {
       onGenerate({
-        smiles, // Incluir SMILES original
+        smiles, // Include original SMILES
         ...properties
       });
     }
@@ -78,7 +78,7 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
     >
       {/* Main Card */}
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-        {/* Header com gradiente */}
+        {/* Header with gradient */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
           <div className="flex items-center justify-center space-x-3 mb-2">
             <Atom className="w-8 h-8" />
@@ -86,7 +86,7 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
             <FlaskConical className="w-8 h-8" />
           </div>
           <p className="text-blue-100 text-center">
-            Digite um SMILES para calcular automaticamente as propriedades moleculares
+            Enter a SMILES to automatically calculate molecular properties
           </p>
         </div>
 
@@ -94,12 +94,12 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
           {/* SMILES Input */}
           <div className="mb-6">
             <label className="text-gray-800 mb-3 block text-left font-semibold text-lg">
-              🧪 SMILES da Molécula
+              🧪 Molecule SMILES
             </label>
             <div className="relative">
               <input
                 type="text"
-                placeholder="Ex: CCO (etanol) ou CC(=O)OC1=CC=CC=C1C(=O)O (aspirina)"
+                placeholder="Ex: CCO (ethanol) or CC(=O)OC1=CC=CC=C1C(=O)O (aspirin)"
                 value={smiles}
                 onChange={(e) => handleSmilesChange(e.target.value)}
                 className="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:bg-white focus:outline-none transition-all duration-200 text-lg"
@@ -113,11 +113,11 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
             </div>
           </div>
 
-          {/* Moléculas de Exemplo Gallery */}
+          {/* Example Molecules Gallery */}
           <div className="mb-8">
             <label className="text-gray-800 mb-4 block text-left font-semibold text-lg flex items-center">
               <Sparkles className="w-5 h-5 mr-2 text-purple-500" />
-              Moléculas de Exemplo
+              Example Molecules
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {TEST_MOLECULES.map(mol => (
@@ -161,7 +161,7 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
               >
                 <div className="flex items-center justify-center space-x-3 text-blue-600">
                   <LoadingSpinner variant="molecule" />
-                  <span className="text-lg font-medium">Calculando propriedades...</span>
+                  <span className="text-lg font-medium">Calculating properties...</span>
                 </div>
               </motion.div>
             )}
@@ -174,14 +174,14 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
               >
                 <div className="flex items-center space-x-2">
                   <AlertTriangle className="w-5 h-5" />
-                  <span className="font-medium">Erro:</span>
+                  <span className="font-medium">Error:</span>
                 </div>
                 <p className="mt-1">{error}</p>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Propriedades Calculadas */}
+          {/* Calculated Properties */}
           <AnimatePresence>
             {properties && (
               <motion.div
@@ -193,7 +193,7 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-bold text-gray-900 text-xl flex items-center">
                     <Calculator className="w-6 h-6 mr-2 text-green-600" />
-                    Propriedades Calculadas
+                    Calculated Properties
                   </h3>
                   <span className={`px-4 py-2 rounded-full text-sm font-bold border-2 ${
                     getComplianceStatus(properties)
@@ -207,25 +207,25 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 font-medium">Peso Molecular</span>
+                      <span className="text-gray-600 font-medium">Molecular Weight</span>
                       <strong className="text-gray-900 text-lg">{properties.molecular_weight} Da</strong>
                     </div>
                   </div>
                   <div className="bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 font-medium">Doadores H</span>
+                      <span className="text-gray-600 font-medium">H-Bond Donors</span>
                       <strong className="text-gray-900 text-lg">{properties.h_bond_donors}</strong>
                     </div>
                   </div>
                   <div className="bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 font-medium">Aceptores H</span>
+                      <span className="text-gray-600 font-medium">H-Bond Acceptors</span>
                       <strong className="text-gray-900 text-lg">{properties.h_bond_acceptors}</strong>
                     </div>
                   </div>
                   <div className="bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 font-medium">Ligações Rotacionáveis</span>
+                      <span className="text-gray-600 font-medium">Rotatable Bonds</span>
                       <strong className="text-gray-900 text-lg">{properties.rotatable_bonds}</strong>
                     </div>
                   </div>
@@ -234,7 +234,7 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
                 <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
                   <div className="text-sm text-blue-800 font-medium text-center">
                     <Info className="w-4 h-4 inline mr-2" />
-                    <strong>Regras de Lipinski + Veber:</strong> MW ≤ 500, HBD ≤ 5, HBA ≤ 10, RB ≤ 10
+                    <strong>Lipinski + Veber Rules:</strong> MW ≤ 500, HBD ≤ 5, HBA ≤ 10, RB ≤ 10
                   </div>
                 </div>
               </motion.div>
@@ -252,12 +252,12 @@ export function SmilesInputForm({ onGenerate, isProcessing }: SmilesFormProps) {
             {isProcessing ? (
               <div className="flex items-center justify-center space-x-3">
                 <LoadingSpinner variant="zk" />
-                <span>Gerando Prova ZK...</span>
+                <span>Generating ZK Proof...</span>
               </div>
             ) : (
               <div className="flex items-center justify-center space-x-3">
                 <Shield className="w-6 h-6" />
-                <span>Gerar Prova de Compliance</span>
+                <span>Generate Compliance Proof</span>
               </div>
             )}
           </motion.button>
