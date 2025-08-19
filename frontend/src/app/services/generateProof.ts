@@ -1,8 +1,6 @@
-// generateProof.ts
-
 import { toast } from "sonner";
 
-// Defina os tipos de SSE (ajuste o path conforme seu projeto)
+// Define SSE types (adjust path as needed)
 export enum MessageTypeSSE {
   INFO = "info",
   SUCCESS = "success",
@@ -29,7 +27,7 @@ export interface ProofResult {
 }
 
 export interface MoleculeData {
-  smiles?: string;  // ← NOVO campo opcional para SMILES
+  smiles?: string;  // ← NEW optional field for SMILES
   molecular_weight: number;
   h_bond_donors: number;
   h_bond_acceptors: number;
@@ -43,14 +41,14 @@ export const generateProof = async (
   const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:3001";
 
   const steps = [
-    "Configurando sessão...",
-    "Carregando circuito...",
-    "Calculando compliance...",
-    "Gerando witness...",
-    "Gerando prova criptográfica...",
-    "Gerando chave de verificação...",
-    "Verificando prova localmente...",
-    "Submetendo para blockchain..."
+    "Configuring session...",
+    "Loading circuit...",
+    "Calculating compliance...",
+    "Generating witness...",
+    "Generating cryptographic proof...",
+    "Generating verification key...",
+    "Verifying proof locally...",
+    "Submitting to blockchain..."
   ];
 
   let currentStep = 0;
@@ -65,24 +63,24 @@ export const generateProof = async (
   };
 
   try {
-    updateProgress(steps[0], "Inicializando bibliotecas ZK...");
+    updateProgress(steps[0], "Initializing ZK libraries...");
     const { UltraPlonkBackend } = await import("@aztec/bb.js");
     const { Noir } = await import("@noir-lang/noir_js");
 
-    updateProgress(steps[1], "Carregando circuito...");
+    updateProgress(steps[1], "Loading circuit...");
     const res = await fetch("/circuit.json");
     const circuit = await res.json();
     const noir = new Noir(circuit);
     const backend = new UltraPlonkBackend(circuit.bytecode);
 
-    updateProgress(steps[2], "Calculando compliance (Lipinski + Veber)...");
+    updateProgress(steps[2], "Calculating compliance (Lipinski + Veber)...");
     
-    // ✅ Log SMILES se fornecido
+    // ✅ Log SMILES if provided
     if (moleculeData.smiles) {
-      console.log("🧪 SMILES processado:", moleculeData.smiles);
+      console.log("🧪 Processed SMILES:", moleculeData.smiles);
     }
     
-    console.log("📊 Propriedades moleculares:", {
+    console.log("📊 Molecular properties:", {
       MW: moleculeData.molecular_weight,
       HBD: moleculeData.h_bond_donors,
       HBA: moleculeData.h_bond_acceptors,
@@ -103,9 +101,9 @@ export const generateProof = async (
 
     const compliance_result = mw * hbd * hba * rb;
 
-    updateProgress(steps[3], "Gerando witness...");
+    updateProgress(steps[3], "Generating witness...");
     
-    // ✅ CORREÇÃO: Converter para inteiros para o circuito Noir
+    // ✅ FIX: Convert to integers for Noir circuit
     const witnessInput = {
       molecular_weight: Math.round(moleculeData.molecular_weight), // Convert to integer
       h_bond_donors: Math.round(moleculeData.h_bond_donors),
@@ -122,23 +120,23 @@ export const generateProof = async (
     
     const { witness } = await noir.execute(witnessInput);
 
-    updateProgress(steps[4], "Gerando prova UltraPlonk...");
+    updateProgress(steps[4], "Generating UltraPlonk proof...");
     const { proof, publicInputs } = await backend.generateProof(witness);
-    console.log("🧪 Public Inputs antes do envio:", publicInputs);
+    console.log("🧪 Public Inputs before sending:", publicInputs);
 
 
-    updateProgress(steps[5], "Gerando chave de verificação...");
+    updateProgress(steps[5], "Generating verification key...");
     const vk = await backend.getVerificationKey();
 
-    updateProgress(steps[6], "Verificando prova localmente...");
+    updateProgress(steps[6], "Verifying proof locally...");
     const verified = await backend.verifyProof({ proof, publicInputs });
-    if (!verified) throw new Error("Falha na verificação local da prova");
+    if (!verified) throw new Error("Local proof verification failed");
 
-    console.log("✅ Prova local verificada!");
+    console.log("✅ Local proof verified!");
     console.log("🔍 Public inputs:", publicInputs);
     console.log("📊 Compliance:", compliance_result === 1 ? "✅ COMPLIANT" : "❌ NON-COMPLIANT");
 
-    updateProgress(steps[7], "Submetendo para zkVerify...");
+    updateProgress(steps[7], "Submitting to zkVerify...");
 
     const eventSource = new EventSource(BACKEND);
     eventSource.onmessage = (event) => {
@@ -153,23 +151,23 @@ export const generateProof = async (
       }
     };
     eventSource.onerror = () => {
-      toast.error("Conexão com servidor SSE perdida");
+      toast.error("SSE server connection lost");
       eventSource.close();
     };
 
-    // 🔧 NOVO BLOCO: converte publicInputs para formato esperado pelo backend
+    // 🔧 NEW BLOCK: convert publicInputs to format expected by backend
     const formattedPublicInputs = publicInputs.map((input) => {
       const n = typeof input === "bigint" ? input : BigInt(input.toString());
       return '0x' + n.toString(16).padStart(64, '0');
     });
 
-    // ✅ Agora envia os publicInputs formatados
+    // ✅ Now send the formatted publicInputs
     const response = await fetch(BACKEND, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         proof: Array.from(proof),
-        publicInputs: formattedPublicInputs,  // <--- AQUI É O AJUSTE CRÍTICO
+        publicInputs: formattedPublicInputs,  // <--- CRITICAL FIX HERE
         vk: Array.from(vk)
       })
     });
@@ -179,19 +177,19 @@ export const generateProof = async (
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Erro HTTP: ${errorText}`);
+      throw new Error(`HTTP Error: ${errorText}`);
     }
 
     const result = await response.json();
 
-    // ✅ CORREÇÃO: Backend retorna { status: "ok", txHash: "0x...", explorer: "https://..." }
+    // ✅ FIX: Backend returns { status: "ok", txHash: "0x...", explorer: "https://..." }
     if (result.txHash && result.status === "ok") {
       const message = compliance_result === 1
-        ? "✅ Molecula compatível submetida com sucesso!"
-        : "⚠️ Molecula não compatível, mas prova enviada!";
+        ? "✅ Compliant molecule successfully submitted!"
+        : "⚠️ Non-compliant molecule, but proof submitted!";
       toast.success(message);
 
-      console.log("🎉 Submissão zkVerify bem-sucedida!");
+      console.log("🎉 zkVerify submission successful!");
       console.log("  - TX Hash:", result.txHash);
       console.log("  - Explorer:", result.explorer);
 
@@ -201,11 +199,11 @@ export const generateProof = async (
         explorer: result.explorer
       };
     } else {
-      throw new Error("Resposta inválida do servidor");
+      throw new Error("Invalid server response");
     }
 
   } catch (err: any) {
-    toast.error("Erro ao gerar prova: " + err.message);
+    toast.error("Error generating proof: " + err.message);
     console.error("💥", err);
     return {
       success: false,
