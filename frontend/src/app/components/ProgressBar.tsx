@@ -16,7 +16,7 @@ export function ProgressBar({ currentStep, totalSteps, currentStepName, isVisibl
   return (
     <div className="w-full max-w-md mx-auto mb-6 p-4 bg-background/50 border border-foreground/10 rounded-lg">
       <div className="flex justify-between items-center mb-3">
-        <span className="text-sm text-foreground/70">Etapa {currentStep} de {totalSteps}</span>
+        <span className="text-sm text-foreground/70">Step {currentStep} of {totalSteps}</span>
         <span className="text-sm font-medium text-foreground/90">{Math.round(progress)}%</span>
       </div>
       <div className="w-full bg-foreground/10 rounded-full h-3 mb-3">
