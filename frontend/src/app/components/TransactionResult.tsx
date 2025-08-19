@@ -16,10 +16,10 @@ export function TransactionResult({ txHash, isVisible }: TransactionResultProps)
       <div className="text-center">
         <div className="text-5xl mb-4 animate-bounce">🎉</div>
         <h3 className="text-xl font-bold text-green-800 mb-3">
-          Prova Enviada com Sucesso!
+          Proof Submitted Successfully!
         </h3>
         <p className="text-sm text-green-700 mb-6">
-          Sua prova foi submetida e verificada na blockchain zkVerify testnet.
+          Your proof was submitted and verified on the zkVerify testnet blockchain.
         </p>
         
         <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg border border-green-200 mb-6">
@@ -39,14 +39,14 @@ export function TransactionResult({ txHash, isVisible }: TransactionResultProps)
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-            Verificar no Subscan
+            Verify on Subscan
           </a>
           
           <div className="text-xs text-green-600">
-            🔗 Clique para ver a transação na blockchain
+            🔗 Click to view the transaction on the blockchain
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}
